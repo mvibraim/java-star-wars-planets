@@ -7,7 +7,6 @@ import org.mapstruct.Mapping;
 import java.util.List;
 import java.util.Optional;
 
-
 @Mapper(componentModel = "spring")
 public interface PlanetMapper {
 
@@ -21,5 +20,4 @@ public interface PlanetMapper {
   default Optional<PlanetDTO> toOptionalDTO(Optional<Planet> sourceOptional) {
     return sourceOptional.map(this::toDTO);
   }
-
 }
