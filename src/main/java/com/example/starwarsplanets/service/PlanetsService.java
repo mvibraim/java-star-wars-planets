@@ -1,10 +1,10 @@
-package com.example.starwarsplanets.services;
+package com.example.starwarsplanets.service;
 
 import org.springframework.stereotype.Service;
-import com.example.starwarsplanets.repositories.PlanetsRepository;
 import com.example.starwarsplanets.dto.PlanetDTO;
+import com.example.starwarsplanets.entity.Planet;
 import com.example.starwarsplanets.mapper.PlanetMapper;
-import com.example.starwarsplanets.entities.Planet;
+import com.example.starwarsplanets.repository.PlanetsRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

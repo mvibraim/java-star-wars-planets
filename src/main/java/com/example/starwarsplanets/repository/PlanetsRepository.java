@@ -1,8 +1,8 @@
-package com.example.starwarsplanets.repositories;
+package com.example.starwarsplanets.repository;
 
-import com.example.starwarsplanets.entities.Planet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import com.example.starwarsplanets.entity.Planet;
 import java.util.UUID;
 import java.util.Optional;
 

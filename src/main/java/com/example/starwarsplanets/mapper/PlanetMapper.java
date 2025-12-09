@@ -2,7 +2,7 @@ package com.example.starwarsplanets.mapper;
 
 import org.mapstruct.Mapper;
 import com.example.starwarsplanets.dto.PlanetDTO;
-import com.example.starwarsplanets.entities.Planet;
+import com.example.starwarsplanets.entity.Planet;
 import org.mapstruct.Mapping;
 import java.util.List;
 import java.util.Optional;

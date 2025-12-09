@@ -1,4 +1,4 @@
-package com.example.starwarsplanets.entities;
+package com.example.starwarsplanets.entity;
 
 import java.util.UUID;
 import jakarta.persistence.Entity;
