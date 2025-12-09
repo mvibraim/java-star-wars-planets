@@ -16,7 +16,7 @@ public class Planet {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String name;
 
   @Column(nullable = false)
@@ -25,9 +25,6 @@ public class Planet {
   @Column(nullable = false)
   private String climate;
 
-  // Constructors, getters and setters, and other methods...
-
-  // Getters
   public UUID getId() {
     return id;
   }
@@ -57,7 +54,7 @@ public class Planet {
     this.climate = climate;
   }
 
-  public void setQuantity(String terrain) {
+  public void setTerrain(String terrain) {
     this.terrain = terrain;
   }
 }

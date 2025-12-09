@@ -2,6 +2,8 @@ package com.example.starwarsplanets.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,12 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.example.starwarsplanets.services.PlanetsService;
-import com.example.starwarsplanets.entities.Planet;
+import com.example.starwarsplanets.dto.PlanetDTO;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 @RestController
 @RequestMapping("/v1/")
 public class PlanetsController {
@@ -26,9 +29,9 @@ public class PlanetsController {
   }
 
   @PostMapping("/planets")
-  public ResponseEntity<Planet> save(@RequestBody Planet planet) {
-    Planet savedPlanet = planetsService.save(planet);
-    URI location = URI.create("/planets/" + planet.getId());
+  public ResponseEntity<PlanetDTO> save(@Valid @RequestBody PlanetDTO planet) {
+    PlanetDTO savedPlanet = planetsService.save(planet);
+    URI location = URI.create("/planets/");
     return ResponseEntity.created(location).body(savedPlanet);
   }
 
@@ -42,14 +45,20 @@ public class PlanetsController {
   }
 
   @GetMapping("/planets")
-  public List<Planet> getAll() {
-    return planetsService.getAll();
+  public ResponseEntity<List<PlanetDTO>> getAll() {
+    return new ResponseEntity<>(planetsService.getAll(), HttpStatus.OK);
   }
 
-  @GetMapping("/products/{id}")
-  public ResponseEntity<Planet> getById(@PathVariable UUID id) {
-    Optional<Planet> planet = planetsService.getById(id);
+  @GetMapping("/planets/search")
+  public ResponseEntity<PlanetDTO> getByParam(@RequestParam(required = false) UUID id,
+      @RequestParam(required = false) @Size(min = 1,
+          message = "Name must not be empty") String name) {
+    if (id != null) {
+      Optional<PlanetDTO> planet = planetsService.getById(id);
+      return planet.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    Optional<PlanetDTO> planet = planetsService.getByName(name);
     return planet.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
   }
-
 }
