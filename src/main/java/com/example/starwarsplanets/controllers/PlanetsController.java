@@ -2,9 +2,10 @@ package com.example.starwarsplanets.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import com.example.starwarsplanets.services.PlanetsService;
-import java.util.Map;
+import com.example.starwarsplanets.entities.Planet;
 
 @RestController
 @RequestMapping("/v1/")
@@ -16,9 +17,9 @@ public class PlanetsController {
     this.planetsService = planetsService;
   }
 
-  @GetMapping("/hello")
-  public Map<String, String> hello() {
-    return planetsService.getPlanet();
+  @PostMapping("/planets")
+  public Planet savePlanet(@RequestBody Planet planet) {
+    return planetsService.save(planet);
   }
 
 }
