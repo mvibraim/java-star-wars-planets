@@ -8,51 +8,80 @@ import org.springframework.http.HttpStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.validation.FieldError;
-import java.util.HashMap;
-import java.util.Map;
 import com.example.starwarsplanets.error.ErrorResponse;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import java.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+  private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse> handleValidationExceptions(
       MethodArgumentNotValidException ex, HttpServletRequest request) {
 
-    Map<String, String> errors = new HashMap<>();
+    StringBuilder message = new StringBuilder();
+
     ex.getBindingResult().getAllErrors().forEach(error -> {
       String fieldName = ((FieldError) error).getField();
-      String errorMessage = error.getDefaultMessage();
-      errors.put(fieldName, errorMessage);
+      String errorMsg = error.getDefaultMessage();
+
+      if (!message.isEmpty()) {
+        message.append("; ");
+      }
+
+      message.append(fieldName).append(": ").append(errorMsg);
     });
 
-    ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
-        "Validation Failed", errors.toString(), request.getRequestURI());
+    logger.warn("Validation error: {}", message);
 
-    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+        "Validation Failed", message.toString(), request.getRequestURI(), LocalDateTime.now());
+
+    return ResponseEntity.badRequest().body(errorResponse);
   }
 
   @ExceptionHandler(DataIntegrityViolationException.class)
   public ResponseEntity<ErrorResponse> handleDatabaseConflictExceptions(
       DataIntegrityViolationException ex, HttpServletRequest request) {
 
-    ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(),
-        "Database operation failed", "`name` value already exists", request.getRequestURI());
+    logger.error("Database integrity violation", ex);
 
-    return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(),
+        "Database Conflict", "A resource with this name already exists", request.getRequestURI(),
+        LocalDateTime.now());
+
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-  public ResponseEntity<ErrorResponse> handleValidationExceptions(
+  public ResponseEntity<ErrorResponse> handleTypeMismatchException(
       MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
 
-    Map<String, String> errors = new HashMap<>();
-    errors.put(ex.getPropertyName(), ex.getMessage());
+    String message = String.format("%s should be of type %s", ex.getName(),
+        ex.getRequiredType().getSimpleName());
+
+    logger.warn("Type mismatch error: {}", message);
 
     ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
-        "Validation Failed", errors.toString(), request.getRequestURI());
+        "Invalid Parameter Type", message, request.getRequestURI(), LocalDateTime.now());
 
-    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    return ResponseEntity.badRequest().body(errorResponse);
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse> handleGenericException(Exception ex,
+      HttpServletRequest request) {
+
+    logger.error("Unexpected error", ex);
+
+    ErrorResponse errorResponse =
+        new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error",
+            "An unexpected error occurred", request.getRequestURI(), LocalDateTime.now());
+
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
   }
 }

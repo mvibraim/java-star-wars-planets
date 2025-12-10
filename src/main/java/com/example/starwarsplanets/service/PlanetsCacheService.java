@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PlanetsCacheService {
+
     private final RedisTemplate<String, Object> redisTemplate;
 
     public PlanetsCacheService(RedisTemplate<String, Object> redisTemplate) {

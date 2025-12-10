@@ -84,4 +84,11 @@ public class Planet {
   public void setTerrain(String terrain) {
     this.terrain = terrain;
   }
+
+  @Override
+  public String toString() {
+    return "Planet{" + "id=" + id + ", name='" + name + '\'' + ", terrain='" + terrain + '\''
+        + ", climate='" + climate + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+        + '}';
+  }
 }
