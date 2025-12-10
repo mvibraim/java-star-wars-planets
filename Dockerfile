@@ -40,6 +40,9 @@ COPY --from=builder /app/spring-boot-loader/ ./
 COPY --from=builder /app/snapshot-dependencies/ ./
 COPY --from=builder /app/application/ ./
 
+# Create logs directory for GC logs
+RUN mkdir -p /app/logs && chown spring:spring /app/logs
+
 # Set the user for running the application
 USER spring
 
@@ -52,8 +55,31 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
 
 # Define the entrypoint with optimized JVM settings for containers
 ENTRYPOINT ["java", \
+  # Container support and memory settings
   "-XX:+UseContainerSupport", \
+  "-XX:InitialRAMPercentage=50.0", \
   "-XX:MaxRAMPercentage=75.0", \
+  "-XX:MinRAMPercentage=50.0", \
+  # G1GC tuning for low-latency
   "-XX:+UseG1GC", \
+  "-XX:MaxGCPauseMillis=200", \
+  "-XX:G1HeapRegionSize=8m", \
+  "-XX:G1ReservePercent=10", \
+  "-XX:InitiatingHeapOccupancyPercent=45", \
+  # GC logging for monitoring
+  "-Xlog:gc*:file=/app/logs/gc.log:time,level,tags:filecount=5,filesize=10M", \
+  # Performance optimizations
   "-XX:+OptimizeStringConcat", \
+  "-XX:+UseStringDeduplication", \
+  "-XX:+ParallelRefProcEnabled", \
+  "-XX:+AlwaysPreTouch", \
+  # JIT compiler optimizations
+  "-XX:+TieredCompilation", \
+  "-XX:TieredStopAtLevel=1", \
+  # Metaspace settings (for Spring Boot)
+  "-XX:MetaspaceSize=128m", \
+  "-XX:MaxMetaspaceSize=256m", \
+  # Enable JMX for monitoring (if needed)
+  "-Djava.rmi.server.hostname=localhost", \
+  "-Dcom.sun.management.jmxremote=false", \
   "org.springframework.boot.loader.launch.JarLauncher"]
