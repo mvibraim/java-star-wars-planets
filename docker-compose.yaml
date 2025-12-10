@@ -1,0 +1,112 @@
+services:
+  # Spring Boot Application
+  app:
+    build: .
+    container_name: star_wars_planets_app
+    restart: always
+    ports:
+      - "8080:8080" # Expose Spring Boot application port
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/$${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: $${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: $${POSTGRES_PASSWORD}
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      prometheus:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    networks:
+      - app-network
+
+  # PostgreSQL Database
+  postgres:
+    container_name: star_wars_planets_postgres
+    image: postgres:18.1-alpine3.23 # Use a recent PostgreSQL image
+    env_file:
+      - .env
+    volumes:
+      - ./init_scripts:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data # Persist PostgreSQL data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB && psql -U $$POSTGRES_USER -d $$POSTGRES_DB -c 'SELECT 1 FROM planets LIMIT 1;' || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - app-network
+
+  # Redis Cache
+  redis:
+    container_name: star_wars_planets_redis
+    image: redis:8.4.0-alpine # Use a recent Redis image
+    command: redis-server --appendonly yes # Enable AOF persistence
+    volumes:
+      - redis_data:/data # Persist Redis data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  # Prometheus Monitoring
+  prometheus:
+    container_name: star_wars_planets_prometheus
+    image: prom/prometheus:latest # Use the latest Prometheus image
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml # Mount Prometheus configuration
+      - prometheus_data:/prometheus # Persist Prometheus data
+    command: --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090" # Expose Prometheus UI
+    networks:
+      - app-network
+
+  # Grafana Dashboards
+  grafana:
+    container_name: star_wars_planets_grafana
+    image: grafana/grafana:latest
+    restart: always
+    ports:
+      - "3000:3000" # Expose Grafana UI
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin123
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  app-network:
+    driver: bridge
