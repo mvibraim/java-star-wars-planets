@@ -1,12 +1,15 @@
 package com.example.starwarsplanets.entity;
 
 import java.util.UUID;
+import java.time.LocalDateTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "planets")
@@ -25,6 +28,22 @@ public class Planet {
   @Column(nullable = false)
   private String climate;
 
+  @CreationTimestamp
+  @Column(nullable = false, updatable = false)
+  private LocalDateTime createdAt;
+
+  @UpdateTimestamp
+  @Column(nullable = false)
+  private LocalDateTime updatedAt;
+
+  public Planet() {}
+
+  public Planet(String name, String terrain, String climate) {
+    this.name = name;
+    this.terrain = terrain;
+    this.climate = climate;
+  }
+
   public UUID getId() {
     return id;
   }
@@ -39,6 +58,14 @@ public class Planet {
 
   public String getClimate() {
     return climate;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
   }
 
   // Setters

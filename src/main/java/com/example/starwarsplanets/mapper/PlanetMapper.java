@@ -3,17 +3,27 @@ package com.example.starwarsplanets.mapper;
 import org.mapstruct.Mapper;
 import com.example.starwarsplanets.dto.PlanetDTO;
 import com.example.starwarsplanets.entity.Planet;
-import org.mapstruct.Mapping;
 import java.util.List;
 import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public interface PlanetMapper {
 
-  @Mapping(target = "id", ignore = true)
-  Planet toEntity(PlanetDTO planetDTO);
+  default Planet toEntity(PlanetDTO planetDTO) {
+    if (planetDTO == null) {
+      return null;
+    }
 
-  PlanetDTO toDTO(Planet planet);
+    return new Planet(planetDTO.name(), planetDTO.terrain(), planetDTO.climate());
+  }
+
+  default PlanetDTO toDTO(Planet planet) {
+    if (planet == null) {
+      return null;
+    }
+
+    return new PlanetDTO(planet.getName(), planet.getTerrain(), planet.getClimate());
+  }
 
   List<PlanetDTO> toDTOList(List<Planet> planets);
 
