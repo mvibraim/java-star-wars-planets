@@ -1,6 +1,10 @@
 package com.example.starwarsplanets.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import com.example.starwarsplanets.dto.PlanetDTO;
 import com.example.starwarsplanets.entity.Planet;
 import com.example.starwarsplanets.mapper.PlanetMapper;
@@ -30,19 +34,23 @@ public class PlanetsService {
     if (planetsRepository.existsById(id)) {
       planetsRepository.deleteById(id);
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
-  public List<PlanetDTO> getAll() {
-    return planetMapper.toDTOList(planetsRepository.findAll());
+  @Transactional(readOnly = true)
+  public Page<PlanetDTO> getAll(Pageable pageable) {
+    Page<Planet> planets = planetsRepository.findAll(pageable);
+    List<PlanetDTO> dtos = planetMapper.toDTOList(planets.getContent());
+    return new PageImpl<>(dtos, pageable, planets.getTotalElements());
   }
 
+  @Transactional(readOnly = true)
   public Optional<PlanetDTO> getById(UUID id) {
     return planetMapper.toOptionalDTO(planetsRepository.findById(id));
   }
 
+  @Transactional(readOnly = true)
   public Optional<PlanetDTO> getByName(String name) {
     return planetMapper.toOptionalDTO(planetsRepository.findByName(name));
   }

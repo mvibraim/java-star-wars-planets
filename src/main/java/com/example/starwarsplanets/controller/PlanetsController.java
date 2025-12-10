@@ -3,17 +3,19 @@ package com.example.starwarsplanets.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import com.example.starwarsplanets.dto.PlanetDTO;
 import com.example.starwarsplanets.service.PlanetsService;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import jakarta.validation.Valid;
@@ -46,8 +48,13 @@ public class PlanetsController {
   }
 
   @GetMapping("/planets")
-  public ResponseEntity<List<PlanetDTO>> getAll() {
-    return new ResponseEntity<>(planetsService.getAll(), HttpStatus.OK);
+  public ResponseEntity<Page<PlanetDTO>> getAll(
+      @RequestParam(defaultValue = "0", value = "page") int page,
+      @RequestParam(defaultValue = "20", value = "size") int size) {
+    int validPage = Math.max(0, page);
+    int validSize = Math.clamp(size, 1, 100);
+    Pageable pageable = PageRequest.of(validPage, validSize, Sort.by("name").ascending());
+    return ResponseEntity.ok(planetsService.getAll(pageable));
   }
 
   @GetMapping("/planets/search")
