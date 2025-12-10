@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import com.example.starwarsplanets.error.ErrorResponse;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,8 +62,11 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleTypeMismatchException(
       MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
 
-    String message = String.format("%s should be of type %s", ex.getName(),
-        ex.getRequiredType().getSimpleName());
+    Class<?> requiredType = ex.getRequiredType();
+    String requiredTypeName =
+        (requiredType != null) ? requiredType.getSimpleName() : "the expected type";
+    String paramName = Objects.toString(ex.getName(), "parameter");
+    String message = String.format("%s should be of type %s", paramName, requiredTypeName);
 
     logger.warn("Type mismatch error: {}", message);
 
