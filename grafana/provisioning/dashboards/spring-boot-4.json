@@ -16,12 +16,7 @@
   "id": 14981,
   "uid": "spring-boot-4-system-monitor",
   "title": "Spring Boot 4.x System Monitor",
-  "tags": [
-    "spring-boot",
-    "spring",
-    "metrics",
-    "micrometer"
-  ],
+  "tags": ["spring-boot", "spring", "metrics", "micrometer"],
   "timezone": "browser",
   "schemaVersion": 16,
   "version": 1,
@@ -31,9 +26,7 @@
       "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
+          "color": {"mode": "palette-classic"},
           "custom": {
             "axisLabel": "",
             "axisPlacement": "auto",
@@ -41,69 +34,35 @@
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
-            "hideFrom": {
-              "tooltip": false,
-              "viz": false,
-              "legend": false
-            },
+            "hideFrom": {"tooltip": false, "viz": false, "legend": false},
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
+            "scaleDistribution": {"type": "linear"},
             "showPoints": "never",
             "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "stacking": {"group": "A", "mode": "none"},
+            "thresholdsStyle": {"mode": "off"}
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
+              {"color": "green", "value": null},
+              {"color": "red", "value": 80}
             ]
           },
           "unit": "percent"
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 0
-      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
       "id": 1,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
+        "legend": {"calcs": [], "displayMode": "list", "placement": "bottom"},
+        "tooltip": {"mode": "single"}
       },
-      "targets": [
-        {
-          "expr": "jvm_memory_used_bytes / jvm_memory_max_bytes * 100",
-          "legendFormat": "JVM Memory Usage %",
-          "refId": "A"
-        }
-      ],
+      "targets": [{"expr": "jvm_memory_used_bytes / jvm_memory_max_bytes * 100", "legendFormat": "JVM Memory Usage %", "refId": "A"}],
       "title": "JVM Memory Usage",
       "type": "timeseries"
     },
@@ -111,9 +70,7 @@
       "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
+          "color": {"mode": "palette-classic"},
           "custom": {
             "axisLabel": "Requests/sec",
             "axisPlacement": "auto",
@@ -121,65 +78,32 @@
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
-            "hideFrom": {
-              "tooltip": false,
-              "viz": false,
-              "legend": false
-            },
+            "hideFrom": {"tooltip": false, "viz": false, "legend": false},
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
+            "scaleDistribution": {"type": "linear"},
             "showPoints": "never",
             "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "stacking": {"group": "A", "mode": "none"},
+            "thresholdsStyle": {"mode": "off"}
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
+            "steps": [{"color": "green", "value": null}]
           },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 0
-      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
       "id": 2,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
+        "legend": {"calcs": [], "displayMode": "list", "placement": "bottom"},
+        "tooltip": {"mode": "single"}
       },
-      "targets": [
-        {
-          "expr": "rate(http_server_requests_seconds_count[5m])",
-          "legendFormat": "HTTP Requests/sec",
-          "refId": "A"
-        }
-      ],
+      "targets": [{"expr": "rate(http_server_requests_seconds_count[5m])", "legendFormat": "HTTP Requests/sec", "refId": "A"}],
       "title": "HTTP Request Rate",
       "type": "timeseries"
     },
@@ -187,115 +111,62 @@
       "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
+          "color": {"mode": "thresholds"},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 1000
-              }
+              {"color": "green", "value": null},
+              {"color": "red", "value": 1000}
             ]
           },
           "unit": "ms"
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 0,
-        "y": 8
-      },
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 8},
       "id": 3,
       "options": {
         "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
         "showThresholdLabels": false,
         "showThresholdMarkers": true,
         "text": {}
       },
       "pluginVersion": "8.0.0",
-      "targets": [
-        {
-          "expr": "histogram_quantile(0.95, rate(http_server_requests_seconds_bucket[5m])) * 1000",
-          "legendFormat": "P95 Latency",
-          "refId": "A"
-        }
-      ],
-      "title": "HTTP P95 Latency",
+      "targets": [{"expr": "(rate(http_server_requests_active_seconds_sum[1m]) / rate(http_server_requests_active_seconds_count[1m])) * 1000", "legendFormat": "Avg Latency", "refId": "A"}],
+      "title": "HTTP Response Time",
       "type": "gauge"
     },
     {
       "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
+          "color": {"mode": "thresholds"},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 20
-              },
-              {
-                "color": "green",
-                "value": 50
-              }
+              {"color": "red", "value": null},
+              {"color": "yellow", "value": 20},
+              {"color": "green", "value": 50}
             ]
           },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 8,
-        "y": 8
-      },
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 8},
       "id": 4,
       "options": {
         "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
         "showThresholdLabels": false,
         "showThresholdMarkers": true,
         "text": {}
       },
       "pluginVersion": "8.0.0",
-      "targets": [
-        {
-          "expr": "jvm_threads_live_threads",
-          "legendFormat": "Live Threads",
-          "refId": "A"
-        }
-      ],
+      "targets": [{"expr": "jvm_threads_live_threads", "legendFormat": "Live Threads", "refId": "A"}],
       "title": "Live Threads",
       "type": "gauge"
     },
@@ -303,70 +174,37 @@
       "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
+          "color": {"mode": "thresholds"},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 5
-              },
-              {
-                "color": "red",
-                "value": 10
-              }
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 5},
+              {"color": "red", "value": 10}
             ]
           },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 16,
-        "y": 8
-      },
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 8},
       "id": 5,
       "options": {
         "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
         "showThresholdLabels": false,
         "showThresholdMarkers": true,
         "text": {}
       },
       "pluginVersion": "8.0.0",
-      "targets": [
-        {
-          "expr": "hikaricp_connections_active",
-          "legendFormat": "Active DB Connections",
-          "refId": "A"
-        }
-      ],
-      "title": "Active DB Connections",
+      "targets": [{"expr": "hikaricp_connections{pool=\"HikariPool-1\"}", "legendFormat": "Pool Size", "refId": "A"}],
+      "title": "DB Connection Pool",
       "type": "gauge"
     }
   ],
   "refresh": "10s",
   "style": "dark",
-  "templating": {
-    "list": []
-  },
-  "time": {
-    "from": "now-1h",
-    "to": "now"
-  }
+  "templating": {"list": []},
+  "time": {"from": "now-1h", "to": "now"}
 }
