@@ -17,6 +17,12 @@ public class PlanetsCacheService {
     }
 
     public Object retrieveData(String key) {
-        return redisTemplate.opsForValue().get(key);
+        Object data = redisTemplate.opsForValue().get(key);
+
+        if (data != null) {
+            return data;
+        } else {
+            return "0";
+        }
     }
 }

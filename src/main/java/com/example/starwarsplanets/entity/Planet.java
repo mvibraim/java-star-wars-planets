@@ -28,6 +28,9 @@ public class Planet {
   @Column(nullable = false)
   private String climate;
 
+  @Column(name = "movie_appearances", nullable = true)
+  private Integer movieAppearances;
+
   @CreationTimestamp
   @Column(nullable = false, updatable = false)
   private LocalDateTime createdAt;
@@ -60,6 +63,10 @@ public class Planet {
     return climate;
   }
 
+  public Integer getMovieApppearances() {
+    return movieAppearances;
+  }
+
   public LocalDateTime getCreatedAt() {
     return createdAt;
   }
@@ -68,7 +75,6 @@ public class Planet {
     return updatedAt;
   }
 
-  // Setters
   public void setId(UUID id) {
     this.id = id;
   }
@@ -85,10 +91,14 @@ public class Planet {
     this.terrain = terrain;
   }
 
+  public void setMovieApppearances(String movieAppearances) {
+    this.movieAppearances = Integer.valueOf(movieAppearances);
+  }
+
   @Override
   public String toString() {
     return "Planet{" + "id=" + id + ", name='" + name + '\'' + ", terrain='" + terrain + '\''
-        + ", climate='" + climate + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-        + '}';
+        + ", climate='" + climate + ", movieAppearances='" + movieAppearances + '\''
+        + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
   }
 }

@@ -21,16 +21,21 @@ public class PlanetsService {
 
   private final PlanetMapper planetMapper;
   private final PlanetsRepository planetsRepository;
+  private final PlanetsCacheService planetsCacheService;
 
-  public PlanetsService(PlanetsRepository planetsRepository, PlanetMapper planetMapper) {
+  public PlanetsService(PlanetsRepository planetsRepository, PlanetMapper planetMapper,
+      PlanetsCacheService planetsCacheService) {
     this.planetsRepository = planetsRepository;
     this.planetMapper = planetMapper;
+    this.planetsCacheService = planetsCacheService;
   }
 
   @Transactional
   @CacheEvict(value = "planets", allEntries = true)
   public ResponsePlanetDTO save(RequestPlanetDTO requestPlanetDTO) {
     Planet planet = planetMapper.toEntity(requestPlanetDTO);
+    String movieAppearances = (String) planetsCacheService.retrieveData(planet.getName());
+    planet.setMovieApppearances(movieAppearances);
     Planet savedPlanet = planetsRepository.save(planet);
     return planetMapper.toDTO(savedPlanet);
   }

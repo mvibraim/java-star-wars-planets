@@ -15,7 +15,8 @@ public interface PlanetMapper {
       return null;
     }
 
-    return new Planet(responsePlanetDTO.name(), responsePlanetDTO.terrain(), responsePlanetDTO.climate());
+    return new Planet(responsePlanetDTO.name(), responsePlanetDTO.terrain(),
+        responsePlanetDTO.climate());
   }
 
   default Planet toEntity(RequestPlanetDTO requestPlanetDTO) {
@@ -23,7 +24,8 @@ public interface PlanetMapper {
       return null;
     }
 
-    return new Planet(requestPlanetDTO.name(), requestPlanetDTO.terrain(), requestPlanetDTO.climate());
+    return new Planet(requestPlanetDTO.name(), requestPlanetDTO.terrain(),
+        requestPlanetDTO.climate());
   }
 
   default ResponsePlanetDTO toDTO(Planet planet) {
@@ -32,7 +34,8 @@ public interface PlanetMapper {
     }
 
     return new ResponsePlanetDTO(planet.getId().toString(), planet.getName(), planet.getTerrain(),
-        planet.getClimate(), planet.getCreatedAt(), planet.getUpdatedAt());
+        planet.getClimate(), planet.getMovieApppearances(), planet.getCreatedAt(),
+        planet.getUpdatedAt());
   }
 
   List<ResponsePlanetDTO> toDTOList(List<Planet> planets);

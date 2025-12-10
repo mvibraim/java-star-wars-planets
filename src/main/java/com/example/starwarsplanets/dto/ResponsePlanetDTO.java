@@ -7,10 +7,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ResponsePlanetDTO(String id, @NotBlank(message = "Name cannot be empty") String name,
     @NotBlank(message = "Terrain cannot be empty") String terrain,
-    @NotBlank(message = "Climate cannot be empty") String climate, LocalDateTime createdAt,
-    LocalDateTime updatedAt) {
+    @NotBlank(message = "Climate cannot be empty") String climate,
+    @NotBlank(message = "MovieAppearances cannot be empty") Integer movieAppearances,
+    LocalDateTime createdAt, LocalDateTime updatedAt) {
 
-  public ResponsePlanetDTO(String name, String terrain, String climate) {
-    this(null, name, terrain, climate, null, null);
+  public ResponsePlanetDTO(String name, String terrain, String climate, Integer movieAppearances) {
+    this(null, name, terrain, climate, movieAppearances, null, null);
   }
 }
