@@ -5,8 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.Contact;
+import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
+@EnableCaching
 @OpenAPIDefinition(info = @Info(title = "Star Wars Planets API", version = "1.0.0",
 		description = "REST API for managing planets from the Star Wars universe",
 		contact = @Contact(name = "API Support",

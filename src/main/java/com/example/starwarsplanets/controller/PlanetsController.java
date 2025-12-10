@@ -9,15 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import com.example.starwarsplanets.dto.ResponsePlanetDTO;
 import com.example.starwarsplanets.dto.RequestPlanetDTO;
+import com.example.starwarsplanets.dto.PagedResponsePlanetDTO;
 import com.example.starwarsplanets.service.PlanetsService;
 import com.example.starwarsplanets.error.ErrorResponse;
-import com.example.starwarsplanets.dto.PagedResponsePlanetDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -70,7 +69,7 @@ public class PlanetsController {
       @ApiResponse(responseCode = "404", description = "Planet not found",
           content = @Content(mediaType = "application/json",
               schema = @Schema(implementation = ErrorResponse.class)))})
-  public ResponseEntity<String> delete(
+  public ResponseEntity<Void> delete(
       @PathVariable @Parameter(description = "UUID of the planet to delete",
           example = "123e4567-e89b-12d3-a456-426614174000") UUID id) {
     if (planetsService.delete(id)) {
@@ -90,7 +89,7 @@ public class PlanetsController {
       @ApiResponse(responseCode = "400", description = "Invalid pagination parameters",
           content = @Content(mediaType = "application/json",
               schema = @Schema(implementation = ErrorResponse.class)))})
-  public ResponseEntity<Page<ResponsePlanetDTO>> getAll(
+  public ResponseEntity<PagedResponsePlanetDTO> getAll(
       @RequestParam(defaultValue = "0") @Parameter(description = "Zero-indexed page number",
           example = "0") int page,
       @RequestParam(defaultValue = "20") @Parameter(description = "Page size (1-100 items)",
